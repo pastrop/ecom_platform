@@ -91,13 +91,14 @@ api.get('/starwars', function(request, response) {
 //        return done('No emails associated with this account!');
 //      }
       console.log('auth data', profile.id.toString());
+//      console.log(profile);
       User.findOneAndUpdate(
         { 'data.oauth': profile.id },
         {
           $set: {
-            'profile.username': profile.emails[0].value,
-            'profile.picture': 'http://graph.facebook.com/' +
-              profile.id.toString() + '/picture?type=large'
+            'profile.username': profile.displayName
+//            'profile.picture': 'http://graph.facebook.com/' +
+//              profile.id.toString() + '/picture?type=large'
           }
         },
         { 'new': true, upsert: true, runValidators: true },
