@@ -1,0 +1,46 @@
+{
+  "name": "thinkful",
+  "version": "1.0.0",
+  "description": "Thinkful Node.js course",
+  "main": "index.js",
+  "dependencies": {
+    "bluebird": "^2.10.1",
+    "body-parser": "^1.14.1",
+    "connect-redis": "^3.0.1",
+    "events": "^1.1.0",
+    "express": "^4.13.3",
+    "express-session": "^1.13.0",
+    "mime": "^1.3.4",
+    "mongodb": "^2.0.33",
+    "mongoose": "^4.3.7",
+    "net": "^1.0.2",
+    "passport": "^0.3.2",
+    "passport-facebook": "^2.1.0",
+    "redis": "^2.3.0",
+    "require": "^2.4.18",
+    "socket.io": "^1.3.7",
+    "stream": "0.0.2",
+    "unirest": "^0.4.0",
+    "util": "^0.10.3"
+  },
+  "devDependencies": {
+    "chai": "^2.3.0",
+    "chai-http": "^1.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pastrop/thinkful.git"
+  },
+  "keywords": [
+    "node.js"
+  ],
+  "author": "Alex",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pastrop/thinkful/issues"
+  },
+  "homepage": "https://github.com/pastrop/thinkful"
+}

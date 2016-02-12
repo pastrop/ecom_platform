@@ -1,0 +1,11 @@
+{
+    "production": {
+        "url": "mongodb://localhost:27017/shopping-list"
+    },
+    "test": {
+        "url": "mongodb://localhost:27017/test"
+    },
+    "development": {
+        "url": "mongodb://localhost:27017/shopping-list-dev"
+    }
+}
