@@ -33,7 +33,8 @@ api.get('/starwars', function(request, response) {
             status(404).
             json({ error: 'Not found-no such category dude' });
         }
-        res.json({ category: category });
+//        res.json({ category: category });
+        res.json(category);
       });
     }
   );
@@ -159,7 +160,7 @@ api.get('/starwars', function(request, response) {
       });
     });
 
-api.post('/checkout', function(req, res) {
+  api.post('/checkout', function(req, res) {
       if (!req.user) {
         return res.
           status(status.UNAUTHORIZED).
