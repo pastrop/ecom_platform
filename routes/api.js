@@ -8,7 +8,18 @@ var stripe = require('stripe');
 
 var stuff = require('../models/category').stuff;//this is just a test line
 var userstuff = require('../models/user').userstuff;//this is just a test line
+//Here is another test fixture:
 
+var user = { //this is a totally fake user to be used if there is not logged in user - Test only!!!
+  profile: {
+    username: 'vkarpov15',
+    picture: 'http://pbs.twimg.com/profile_images/550304223036854272/Wwmwuh2t.png'
+  },
+  data: {
+    oauth: 'invalid',
+    cart: []
+  }
+};
 
 var api = express.Router();
 
@@ -130,10 +141,9 @@ api.get('/starwars', function(request, response) {
 // User / User-card piece
 
   api.get('/me', function(req, res) { //User handle
-    if (!req.user) {
-      return res.
-//        status(status.UNAUTHORIZED).
-        json({ error: 'Not logged in' });
+    if (!req.user) {    
+      return res.json({ error: 'Not logged in' });
+
     }
     console.log('got the logged in User!!!!!!');
     req.user.populate({ path: 'data.cart.product', model: 'Product' },
@@ -142,7 +152,11 @@ api.get('/starwars', function(request, response) {
 
     api.put('/me/cart', function(req, res) {
       try {
-        var cart = req.body.data.cart;
+        if(!req.user){//test user - test fixture only!!!!! 
+          req.user = user; 
+//          console.log(req.user);
+        }
+        var cart = req.user.data.cart; //test mode, change user back to body!!!
       } catch(e) {
         return res.
 //          status(status.BAD_REQUEST).
@@ -150,12 +164,14 @@ api.get('/starwars', function(request, response) {
       }
 
       req.user.data.cart = cart;
-      req.user.save(function(error, user) {
+      console.log('print in api.js line 167: req.user',req.user.profile.username);
+      User.findOneAndUpdate({"username": req.user.profile.username},{"data.cart": req.user.data.cart},function(error, user) { //this doesn't really work, save method has issues
         if (error) {
           return res.
-            status(status.INTERNAL_SERVER_ERROR).
+//            status(status.INTERNAL_SERVER_ERROR).
             json({ error: error.toString() });
         }
+        console.log('api inside findOneAndUpdate: ', user);
         return res.json({ user: user });
       });
     });
@@ -163,7 +179,7 @@ api.get('/starwars', function(request, response) {
   api.post('/checkout', function(req, res) {
       if (!req.user) {
         return res.
-          status(status.UNAUTHORIZED).
+//          status(status.UNAUTHORIZED).
           json({ error: 'Not logged in' });
       }
 
