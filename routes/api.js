@@ -77,6 +77,11 @@ api.get('/starwars', function(request, response) {
         });
     }
   ); 
+
+    api.get('/product/id/:id',function(req, res) {
+      console.log(req.params.id);
+      Product.findOne({ _id: req.params.id },handleOne.bind(null, 'product', res));
+  });
 //here comes authentication crap*************************
 
   var passport = require('passport');
@@ -152,11 +157,11 @@ api.get('/starwars', function(request, response) {
 
     api.put('/me/cart', function(req, res) {
       try {
-        if(!req.user){//test user - test fixture only!!!!! 
-          req.user = user; 
+//        if(!req.user){//test user - test fixture only!!!!! 
+//          req.user = user; 
 //          console.log(req.user);
-        }
-        var cart = req.user.data.cart; //test mode, change user back to body!!!
+//        }
+        var cart = req.body.data.cart; //should be req.user. in test mode, change user back to body in prod!!!
       } catch(e) {
         return res.
 //          status(status.BAD_REQUEST).
@@ -234,7 +239,7 @@ module.exports = api;
 function handleOne(property, res, error, result) {
   if (error) {
     return res.
-      status(status.INTERNAL_SERVER_ERROR).
+//      status(status.INTERNAL_SERVER_ERROR).
       json({ error: error.toString() });
   }
   if (!result) {
@@ -246,4 +251,5 @@ function handleOne(property, res, error, result) {
   var json = {};
   json[property] = result;
   res.json(json);
+//    res.json(result);
 }

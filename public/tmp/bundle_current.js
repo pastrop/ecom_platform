@@ -1549,185 +1549,19 @@
 }.call(this));
 
 },{}],2:[function(require,module,exports){
-exports.AddToCartController = function($scope, $http, $user, $timeout) {
-  $scope.addToCart = function(product) {
-    var obj = { product: product._id, quantity: 1 };
-    $user.user.data.cart.push(obj);
-
-    $http.
-      put('/me/cart', { data: { cart: $user.user.data.cart } }).
-      success(function(data) {
-        $user.loadUser();
-        $scope.success = true;
-
-        $timeout(function() {
-          $scope.success = false;
-        }, 5000);
-      });
-  };
-};
-
-exports.CategoryProductsController = function($scope, $routeParams, $http) {
-  var encoded = encodeURIComponent($routeParams.category);
-
-  $scope.price = undefined;
-
-  $scope.handlePriceClick = function() {
-    if ($scope.price === undefined) {
-      $scope.price = -1;
-    } else {
-      $scope.price = 0 - $scope.price;
-    }
-    $scope.load();
-  };
-
-  $scope.load = function() {
-    var queryParams = { price: $scope.price };
-    $http.
-      get('/product/category/' + encoded, { params: queryParams }).
-      success(function(data) {
-        $scope.products = data.products;
-      });
-  };
-
-  $scope.load();
-
-  setTimeout(function() {
-    $scope.$emit('CategoryProductsController');
-  }, 0);
-};
-
-exports.CategoryTreeController = function($scope, $routeParams, $http) {
-  var encoded = encodeURIComponent($routeParams.category);
-  console.log('CategoryTreeController encoded:',encoded);
-  $http.
-    get('/category/id/' + encoded).
-    success(function(data) {
-      console.log('/category/id/');
-      console.log(data);
-      $scope.category = data.category;
-      $http.
-        get('/category/parent/' + encoded).
-        success(function(data) {
-          console.log('/category/parent/');
-          console.log(data.categories[0]);
-          $scope.children = data.categories[0];
-        });
-    });
-
-  setTimeout(function() {
-    $scope.$emit('CategoryTreeController');
-  }, 0);
-};
-
-exports.CheckoutController = function($scope, $user, $http) {
-  // For update cart
-  $scope.user = $user;
-
-  $scope.updateCart = function() {
-    $http.
-      put('/me/cart', $user.user).
-      success(function(data) {
-        $scope.updated = true;
-      });
-  };
-
-  // For checkout
-  Stripe.setPublishableKey('pk_test_KVC0AphhVxm52zdsM4WoBstU');
-
-  $scope.stripeToken = {
-    number: '4242424242424242',
-    cvc: '123',
-    exp_month: '12',
-    exp_year: '2016'
-  };
-
-  $scope.checkout = function() {
-    $scope.error = null;
-    Stripe.card.createToken($scope.stripeToken, function(status, response) {
-      if (status.error) {
-        $scope.error = status.error;
-        return;
-      }
-
-      $http.
-        post('/checkout', { stripeToken: response.id }).
-        success(function(data) {
-          $scope.checkedOut = true;
-          $user.user.data.cart = [];
-        });
-    });
-  };
-};
-
-exports.NavBarController = function($scope, $user) {
+exports.UserMenuController = function($scope, $user) {
   $scope.user = $user;
 
   setTimeout(function() {
-    $scope.$emit('NavBarController');
-  }, 0);
-};
-
-exports.ProductDetailsController = function($scope, $routeParams, $http) {
-  var encoded = encodeURIComponent($routeParams.id);
-
-  $http.
-    get('/product/id/' + encoded).
-    success(function(data) {
-      var tmp = data.product.category;
-      console.log('/product/id/');
-      console.log(tmp[0].ancestors);
-      console.log(JSON.stringify(tmp));
-      $scope.product = data.product;
-      $scope.buttons = tmp[0].ancestors;
-    });
-
-  setTimeout(function() {
-    $scope.$emit('ProductDetailsController');
+    $scope.$emit('UserMenuController');
   }, 0);
 };
 
 },{}],3:[function(require,module,exports){
-exports.addToCart = function() {
+exports.userMenu = function() {
   return {
-    controller: 'AddToCartController',
-    templateUrl: '/templates/add_to_cart.html'
-  };
-};
-
-exports.categoryProducts = function() {
-  return {
-    controller: 'CategoryProductsController',
-    templateUrl: '/templates/category_products.html'
-  }
-};
-
-exports.categoryTree = function() {
-  return {
-    controller: 'CategoryTreeController',
-    templateUrl: '/templates/category_tree.html'
-  }
-};
-
-exports.checkout = function() {
-  return {
-    controller: 'CheckoutController',
-    templateUrl: '/templates/checkout.html'
-  };
-};
-
-exports.navBar = function() {
-  return {
-    controller: 'NavBarController',
-    templateUrl: '/templates/nav_bar.html'
-//    templateUrl: '/templates/user_menu.html'
-  };
-};
-
-exports.productDetails = function() {
-  return {
-    controller: 'ProductDetailsController',
-    templateUrl: '/templates/product_details.html'
+    controller: 'UserMenuController',
+    templateUrl: '/templates/user_menu.html'
   };
 };
 
@@ -1737,33 +1571,18 @@ var directives = require('./directives');
 var services = require('./services');
 var _ = require('underscore');
 
-var components = angular.module('mean-retail.components', ['ng']);
+var app = angular.module('mean-retail', ['ng']);
 
 _.each(controllers, function(controller, name) {
-  components.controller(name, controller);
+  app.controller(name, controller);
 });
 
 _.each(directives, function(directive, name) {
-  components.directive(name, directive);
+  app.directive(name, directive);
 });
 
 _.each(services, function(factory, name) {
-  components.factory(name, factory);
-});
-
-var app = angular.module('mean-retail', ['mean-retail.components', 'ngRoute']);
-
-app.config(function($routeProvider) {
-  $routeProvider.
-    when('/category/:category', {
-      templateUrl: '/templates/category_view.html'
-    }).
-    when('/checkout', {
-      template: '<checkout></checkout>'
-    }).
-    when('/product/:id', {
-      template: '<product-details></product-details>'
-    });
+  app.factory(name, factory);
 });
 
 },{"./controllers":2,"./directives":3,"./services":5,"underscore":1}],5:[function(require,module,exports){
@@ -1778,8 +1597,9 @@ exports.$user = function($http) {
       success(function(data) {
         s.user = data.user;
       }).
-      error(function(data, status) {
-        if (status === 401) {
+      error(function(data, $status) {
+        if ($status > 400) {
+          console.log('something went terribly wrong....', $status);
           s.user = null;
         }
       });

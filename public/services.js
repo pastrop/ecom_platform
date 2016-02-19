@@ -9,9 +9,8 @@ exports.$user = function($http) {
       success(function(data) {
         s.user = data.user;
       }).
-      error(function(data, $status) {
-        if ($status > 400) {
-          console.log('something went terribly wrong....', $status);
+      error(function(data, status) {
+        if (status === 401) {
           s.user = null;
         }
       });
