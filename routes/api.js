@@ -12,7 +12,7 @@ var userstuff = require('../models/user').userstuff;//this is just a test line
 
 var user = { //this is a totally fake user to be used if there is not logged in user - Test only!!!
   profile: {
-    username: 'vkarpov15',
+    username: 'testuser',
     picture: 'http://pbs.twimg.com/profile_images/550304223036854272/Wwmwuh2t.png'
   },
   data: {
