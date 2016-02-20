@@ -35,6 +35,8 @@ exports.CategoryProductsController = function($scope, $routeParams, $http) {
     $http.
       get('/product/category/' + encoded, { params: queryParams }).
       success(function(data) {
+        console.log('product/category');
+        console.log(data.products);
         $scope.products = data.products;
       });
   };
@@ -52,15 +54,17 @@ exports.CategoryTreeController = function($scope, $routeParams, $http) {
   $http.
     get('/category/id/' + encoded).
     success(function(data) {
-      console.log('/category/id/');
-      console.log(data);
-      $scope.category = data.category;
+//      console.log('/category/id/ - data object being sent back');
+//      console.log(data);
+//      console.log('--------------------------');
+//      console.log(data.ancestors);
+      $scope.category = data.ancestors;
       $http.
         get('/category/parent/' + encoded).
         success(function(data) {
-          console.log('/category/parent/');
-          console.log(data.categories[0]);
-          $scope.children = data.categories[0];
+//          console.log('/category/parent/');
+//          console.log(data);
+          if(data.categories[0]){$scope.children = data.categories[0].ancestors;}
         });
     });
 
@@ -124,9 +128,9 @@ exports.ProductDetailsController = function($scope, $routeParams, $http) {
     get('/product/id/' + encoded).
     success(function(data) {
       var tmp = data.product.category;
-      console.log('/product/id/');
-      console.log(tmp[0].ancestors);
-      console.log(JSON.stringify(tmp));
+//      console.log('/product/id/');
+//      console.log(tmp[0].ancestors);
+//      console.log(JSON.stringify(tmp));
       $scope.product = data.product;
       $scope.buttons = tmp[0].ancestors;
     });

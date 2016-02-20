@@ -67,8 +67,8 @@ api.get('/starwars', function(request, response) {
 
   api.get('/product/category/:id', function(req, res) {
       Product.
-        findOne({ 'category._id': req.params.id }, function(error, products) {
-          console.log('got into Product API and printed stuff', userstuff);
+        find({ 'category._id': req.params.id }, function(error, products) {
+          console.log('got into Product API and printed stuff', req.params.id);
           if (error) {
             return res.status('FUCKING INTERNAL_SERVER_ERROR LOOKING FOR A PRODUCT');
           }
