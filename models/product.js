@@ -33,13 +33,13 @@ module.exports.Product = Product;
  * Human-readable string form of price - "$25" rather
  * than "25 USD"
  */
-/*schema.virtual('displayPrice').get(function() {
+schema.virtual('displayPrice').get(function() {
   return currencySymbols[this.price.currency] +
     '' + this.price.amount;
 });
 
 schema.set('toObject', { virtuals: true });
-schema.set('toJSON', { virtuals: true }); */
+schema.set('toJSON', { virtuals: true }); 
 
 
 

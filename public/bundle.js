@@ -1552,8 +1552,7 @@
 exports.AddToCartController = function($scope, $http, $user, $timeout) {
   $scope.addToCart = function(product) {
     var obj = { product: product._id, quantity: 1 };
-    $user.user.data.cart.push(obj);
-
+    $user.user.data.cart.push(obj);    
     $http.
       put('/me/cart', { data: { cart: $user.user.data.cart } }).
       success(function(data) {
@@ -1627,11 +1626,12 @@ exports.CategoryTreeController = function($scope, $routeParams, $http) {
 exports.CheckoutController = function($scope, $user, $http) {
   // For update cart
   $scope.user = $user;
-
+  console.log('CheckoutController print user object: ',$user);
   $scope.updateCart = function() {
     $http.
       put('/me/cart', $user.user).
       success(function(data) {
+        console.log('CheckoutController print data object: ',data);
         $scope.updated = true;
       });
   };

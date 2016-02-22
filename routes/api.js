@@ -162,6 +162,7 @@ api.get('/starwars', function(request, response) {
 //          console.log(req.user);
 //        }
         var cart = req.body.data.cart; //should be req.user. in test mode, change user back to body in prod!!!
+        console.log('api /me/cart handle - cart content: ', cart);
       } catch(e) {
         return res.
 //          status(status.BAD_REQUEST).
@@ -170,7 +171,7 @@ api.get('/starwars', function(request, response) {
 
       req.user.data.cart = cart;
       console.log('print in api.js line 167: req.user',req.user.profile.username);
-      User.findOneAndUpdate({"username": req.user.profile.username},{"data.cart": req.user.data.cart},function(error, user) { //this doesn't really work, save method has issues
+      User.findOneAndUpdate({"username": req.user.profile.username},{"data.cart": req.user.data.cart},{upsert: true, 'new': true},function(error, user) { //this doesn't really work, save method has issues
         if (error) {
           return res.
 //            status(status.INTERNAL_SERVER_ERROR).
