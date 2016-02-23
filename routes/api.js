@@ -3,7 +3,8 @@ var bodyparser = require('body-parser');
 var Category = require('../models/category').Category;
 var Product = require('../models/product').Product;
 var User = require('../models/user').User;
-var stripe = require('stripe');
+var Stripe = require('stripe')('stripe_api_goes_here');
+var _ = require('underscore');
 //var auth = ('./auth').auth;
 
 var stuff = require('../models/category').stuff;//this is just a test line
@@ -31,15 +32,15 @@ api.get('/starwars', function(request, response) {
 });
 
   api.get('/category/id/:id', function(req, res) {
-    console.log(req.params.id);
+//    console.log(req.params.id);
       Category.findOne({ _id: req.params.id }, function(error, category) {
-        console.log('got into API');
+//        console.log('got into API');
         if (error) {
           return res.
             status('FUCKING INTERNAL_SERVER_ERROR');
         }
         if (!category) {
-          console.log('no category');
+//          console.log('no category');
           return res.
             status(404).
             json({ error: 'Not found-no such category dude' });
@@ -68,7 +69,7 @@ api.get('/starwars', function(request, response) {
   api.get('/product/category/:id', function(req, res) {
       Product.
         find({ 'category._id': req.params.id }, function(error, products) {
-          console.log('got into Product API and printed stuff', req.params.id);
+//          console.log('got into Product API and printed stuff', req.params.id);
           if (error) {
             return res.status('FUCKING INTERNAL_SERVER_ERROR LOOKING FOR A PRODUCT');
           }
@@ -79,7 +80,7 @@ api.get('/starwars', function(request, response) {
   ); 
 
     api.get('/product/id/:id',function(req, res) {
-      console.log(req.params.id);
+//      console.log(req.params.id);
       Product.findOne({ _id: req.params.id },handleOne.bind(null, 'product', res));
   });
 //here comes authentication crap*************************
@@ -150,7 +151,8 @@ api.get('/starwars', function(request, response) {
       return res.json({ error: 'Not logged in' });
 
     }
-    console.log('got the logged in User!!!!!!');
+//    console.log('/me handle - data.cart.product: ', data.cart.product);
+
     req.user.populate({ path: 'data.cart.product', model: 'Product' },
       handleOne.bind(null, 'user', res));
   });
@@ -161,7 +163,7 @@ api.get('/starwars', function(request, response) {
 //          req.user = user; 
 //          console.log(req.user);
 //        }
-        var cart = req.body.data.cart; //should be req.user. in test mode, change user back to body in prod!!!
+        var cart = req.body.data.cart; 
         console.log('api /me/cart handle - cart content: ', cart);
       } catch(e) {
         return res.
@@ -171,13 +173,21 @@ api.get('/starwars', function(request, response) {
 
       req.user.data.cart = cart;
       console.log('print in api.js line 167: req.user',req.user.profile.username);
-      User.findOneAndUpdate({"username": req.user.profile.username},{"data.cart": req.user.data.cart},{upsert: true, 'new': true},function(error, user) { //this doesn't really work, save method has issues
+      User.findOneAndUpdate({"profile.username": req.user.profile.username},{"data.cart": req.user.data.cart},{upsert: true, 'new': true},function(error, user) { //this doesn't really work, save method has issues
         if (error) {
           return res.
 //            status(status.INTERNAL_SERVER_ERROR).
             json({ error: error.toString() });
-        }
+        }        
         console.log('api inside findOneAndUpdate: ', user);
+//Populate Call:
+/*        req.user.populate({ path: 'data.cart.product', model: 'Product' },
+        function (error, user){
+          if (error){return res. json({ error: error.toString()});}
+          console.log(('api inside findOneAndUpdate-populate: ', user);)
+          return res.json({ user: user });
+        }); */
+
         return res.json({ user: user });
       });
     });
@@ -194,9 +204,12 @@ api.get('/starwars', function(request, response) {
 
         // Sum up the total price in USD
         var totalCostUSD = 0;
+        console.log ('/checkout handle populate function cart content: ', user.data.cart)
         _.each(user.data.cart, function(item) {
-          totalCostUSD += item.product.internal.approximatePriceUSD *
-            item.quantity;
+          console.log('inside _.each function in checkout: ', item);
+//          totalCostUSD += item.product.internal.approximatePriceUSD *
+//            item.quantity;
+           totalCostUSD += 10; //test fixture, fix the line above later
         });
 
         // And create a charge in Stripe corresponding to the price

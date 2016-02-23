@@ -1625,19 +1625,25 @@ exports.CategoryTreeController = function($scope, $routeParams, $http) {
 
 exports.CheckoutController = function($scope, $user, $http) {
   // For update cart
+  //New Get call to /me
+  $http.
+    get('/me').
+    success(function(item){
+//      console.log(item);
+    });
   $scope.user = $user;
   console.log('CheckoutController print user object: ',$user);
   $scope.updateCart = function() {
     $http.
       put('/me/cart', $user.user).
       success(function(data) {
-        console.log('CheckoutController print data object: ',data);
+//        console.log('CheckoutController print data object: ',data);
         $scope.updated = true;
       });
   };
 
   // For checkout
-  Stripe.setPublishableKey('pk_test_KVC0AphhVxm52zdsM4WoBstU');
+  Stripe.setPublishableKey('pk_test_6RVsA1RYQDQq41aIlMFOjeYS');
 
   $scope.stripeToken = {
     number: '4242424242424242',
