@@ -7,7 +7,13 @@ var productSchema = {
   // Pictures must start with "http://"
   pictures: [{ type: String, match: /^http:\/\//i }],
   price: {
-    amount: {type: Number},
+    amount: { type: Number,
+              required: true,
+              set: function(v) {
+                    this.internal.approximatePriceUSD = v;
+                    return v;
+                  }
+    },
     // Only 3 supported currencies for now
     currency: {
       type: String,
@@ -16,6 +22,9 @@ var productSchema = {
     }
   },
   category: [categorySchema],
+  internal: {
+    approximatePriceUSD: Number
+  }
 };
 
 var schema = new mongoose.Schema(productSchema);

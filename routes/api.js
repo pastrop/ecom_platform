@@ -3,14 +3,14 @@ var bodyparser = require('body-parser');
 var Category = require('../models/category').Category;
 var Product = require('../models/product').Product;
 var User = require('../models/user').User;
-var Stripe = require('stripe')('stripe_api_goes_here');
+var Stripe = require('stripe')('Stripe - api');
 var _ = require('underscore');
 //var auth = ('./auth').auth;
 
 var stuff = require('../models/category').stuff;//this is just a test line
 var userstuff = require('../models/user').userstuff;//this is just a test line
-//Here is another test fixture:
 
+//Here is another test fixture:
 var user = { //this is a totally fake user to be used if there is not logged in user - Test only!!!
   profile: {
     username: 'testuser',
@@ -110,7 +110,6 @@ api.get('/starwars', function(request, response) {
 //        return done('No emails associated with this account!');
 //      }
       console.log('auth data', profile.id.toString());
-//      console.log(profile);
       User.findOneAndUpdate(
         { 'data.oauth': profile.id },
         {
@@ -180,14 +179,6 @@ api.get('/starwars', function(request, response) {
             json({ error: error.toString() });
         }        
         console.log('api inside findOneAndUpdate: ', user);
-//Populate Call:
-/*        req.user.populate({ path: 'data.cart.product', model: 'Product' },
-        function (error, user){
-          if (error){return res. json({ error: error.toString()});}
-          console.log(('api inside findOneAndUpdate-populate: ', user);)
-          return res.json({ user: user });
-        }); */
-
         return res.json({ user: user });
       });
     });
@@ -206,10 +197,9 @@ api.get('/starwars', function(request, response) {
         var totalCostUSD = 0;
         console.log ('/checkout handle populate function cart content: ', user.data.cart)
         _.each(user.data.cart, function(item) {
-          console.log('inside _.each function in checkout: ', item);
-//          totalCostUSD += item.product.internal.approximatePriceUSD *
-//            item.quantity;
-           totalCostUSD += 10; //test fixture, fix the line above later
+//          console.log('***inside _.each function in checkout: ', item.product.internal.approximatePriceUSD);
+          totalCostUSD += item.product.internal.approximatePriceUSD *item.quantity;
+//          console.log('***inside _.each function in checkout totalCostUSD: ',totalCostUSD);
         });
 
         // And create a charge in Stripe corresponding to the price
@@ -265,5 +255,4 @@ function handleOne(property, res, error, result) {
   var json = {};
   json[property] = result;
   res.json(json);
-//    res.json(result);
 }
