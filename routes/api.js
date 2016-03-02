@@ -104,6 +104,7 @@ api.get('/starwars', function(request, response) {
       clientID: 927630150619529,
       clientSecret: '5f7cbce1a79d4d1bac6aea1deae6ab88',
       callbackURL: 'http://localhost:8080/auth/facebook/callback'
+//      callbackURL: 'http://localhost:8080/'
     },
     function(accessToken, refreshToken, profile, done) {
 //      if (!profile.emails || !profile.emails.length) {
@@ -136,10 +137,14 @@ api.get('/starwars', function(request, response) {
   api.get('/auth/facebook',
     passport.authenticate('facebook', { scope: ['email'] }));
 
-  api.get('/auth/facebook/callback',
-    passport.authenticate('facebook', { failureRedirect: '/fail' }),
-    function(req, res) {
+//    api.get('/',
+    api.get('/auth/facebook/callback',  
+    passport.authenticate('facebook', {successRedirect: '/', failureRedirect: '/fail' }),
+    function(req, res) {   
+      console.log('Welcome, ' + req.user.profile.username);
       res.send('Welcome, ' + req.user.profile.username);
+//       res.redirect('/');
+       
     });
 //end of authentication ****************************************************
 

@@ -1632,7 +1632,7 @@ exports.CheckoutController = function($scope, $user, $http) {
 //      console.log(item);
     });
   $scope.user = $user;
-  console.log('CheckoutController print user object: ',$user);
+  console.log('CheckoutController print user object: ',$user.user);
   $scope.updateCart = function() {
     $http.
       put('/me/cart', $user.user).
@@ -1672,7 +1672,7 @@ exports.CheckoutController = function($scope, $user, $http) {
 
 exports.NavBarController = function($scope, $user) {
   $scope.user = $user;
-
+  console.log('NavBarController print $scope.user: ', $user.user);
   setTimeout(function() {
     $scope.$emit('NavBarController');
   }, 0);

@@ -3,8 +3,8 @@
     <div class="logo">
       <img src="/mean-retail-logo.png" />
     </div>
-    <div class="title">
-      MEAN Retail
+    <div class="title" ng-model="user">
+      MEAN Retail Welcomes {{user.user.profile.username}}
     </div>
     <div class="user-info">
       <div class="checkout" ng-show="user.user">
