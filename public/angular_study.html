@@ -1,0 +1,67 @@
+<html ng-app="testing">
+  <head>
+    <script type="text/javascript"
+      src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.js">
+    </script>
+    <script type="text/javascript"
+      src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-route.js">
+    </script>
+  </head>
+<body ng-controller='DeathrayMenuController' ng-click='closeMenu()'>
+  <form ng-submit = 'requestFunding()' ng-controller="StartUpController">
+    {{stuff}}: <input ng-change="computeNeeded()" ng-model="funding.startingEstimate">
+    Recommendation: {{needed}}
+    <br></br>
+    <button> Fund Me!!!</button>
+  </form>
+<div ng-click="$event.stopPropagation()">
+  <button ng-click='toggleMenu()'>Toggle Menu</button>
+  <ul ng-show='menuState'>
+    <li class='menu-disabled-{{isDisabled}}'ng-mouseover='stun()'>Stun</li>
+    <li class='menu-enabled-{{isEnabled}}'>Disintegrate</li>
+    <li>Erase from history</li>
+  </ul>
+<div/>
+<style>
+.menu-disabled-true {
+  color: gray;
+}
+.menu-enabled-true {
+  color: red;
+}
+</style>
+<script>
+angular.module('testing',[])
+.controller('StartUpController', function($scope) {
+  $scope.stuff='Finishing';
+  $scope.funding = { startingEstimate: 0 };
+  $scope.computeNeeded = function() {
+    return $scope.needed = $scope.funding.startingEstimate * 10;
+  };
+  $scope.requestFunding = function(){
+    alert('you are such a looser, get some customers first....');
+    $scope.funding.startingEstimate=0;
+  };
+
+  $scope.$watch($scope.computeNeeded, setAlert);
+  function setAlert() {
+    if($scope.needed>90){console.log('you want way too much money!!!!');}
+  };
+})
+.controller('DeathrayMenuController', function($scope) {
+  $scope.menuState = false;
+  $scope.isDisabled = false;
+  $scope.toggleMenu = function() {
+    $scope.menuState = !$scope.menuState;
+  };
+  $scope.closeMenu = function(){
+      $scope.menuState = false;
+  };
+  $scope.stun = function(){
+    $scope.isDisabled = true;
+  };
+});
+
+</script>
+</body>
+</html>

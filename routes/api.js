@@ -26,7 +26,7 @@ var api = express.Router();
 
 api.use(bodyparser.json());
 
-api.get('/starwars', function(request, response) {
+api.get('/starwars', function(request, response) { //This is just for testing
     response.send("Beware of the Power of the Force....");
 //    console.log('checking auth');
 });
